@@ -1,18 +1,19 @@
 const questionsRouter = require('express').Router()
 const Question = require('../models/question')
 
-questionsRouter.get('/api/questions', async (req, res) => {
-  const questions = await Question.find({})
+questionsRouter.get('/', async (req, res) => {
+  const questions = await Question.find({}).populate('category', { name: 1 })
   res.json(questions.map(Question.format))
 })
 
-questionsRouter.post('/api/questions', (req, res) => {
+questionsRouter.post('/', async (req, res) => {
   const body = req.body
   const question = new Question({
     question: body.question,
-    answers: body.answer,
+    answers: body.answers,
     correctAnswer: body.correctAnswer,
-    explanation: body.explanation
+    explanation: body.explanation,
+    category: body.category
   })
   await question.save()
   res.json(question)
