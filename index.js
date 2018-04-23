@@ -8,6 +8,9 @@ const bodyParser = require('body-parser')
 const config = require('./utils/config')
 const questionsRouter = require('./controllers/questions')
 const categoriesRouter = require('./controllers/categories')
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
+const answerRouter = require('./controllers/answers')
 
 mongoose.connect(config.mongoUrl)
 mongoose.Promise = global.Promise
@@ -19,6 +22,9 @@ app.use(middleware.logger)
 
 app.use('/api/questions', questionsRouter)
 app.use('/api/categories', categoriesRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
+app.use('/api/answers', answerRouter)
 
 const server = http.createServer(app)
 
