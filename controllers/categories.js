@@ -27,6 +27,11 @@ categoriesRouter.get('/', async (req, res) => {
   res.json(categories.map(Category.format))
 })
 
+categoriesRouter.get('/:id', async (req, res) => {
+  const category = await Category.findById(req.params.id).populate('questions', { question: 1 })
+  res.json(Category.format(category))
+})
+
 categoriesRouter.post('/', async (req, res) => {
   const body = req.body
 

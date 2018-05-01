@@ -23,7 +23,7 @@ const authenticationCheck = (request) => {
 }
 
 answersRouter.get('/', async (req, res) => {
-  const answers = await Answer.find({}).populate('question', { question: 1, correctAnswer: 1 })
+  const answers = await Answer.find({}).populate('question', { question: 1, correctAnswer: 1, category: 1 })
   res.json(answers.map(Answer.format))
 })
 
@@ -36,7 +36,27 @@ answersRouter.post('/', async (req, res) => {
     date: new Date()
   })
   const savedAnswer = await answer.save()
-  res.json(savedAnswer)
+  res.json(Answer.format(savedAnswer))
+})
+
+answersRouter.delete('/:id', async (req, res) => {
+  try {
+
+    const decodedToken = authenticationCheck(req)
+    if (!decodedToken) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const authorizedUser = await User.findById(decodedToken.id)
+    if (authorizedUser.type !== 'admin') {
+      return res.status(401).json({ error: 'authorization required' })
+    }
+
+    await Answer.findByIdAndRemove(req.params.id)
+    res.status(204).end()
+  } catch (exception) {
+    console.log(exception)
+  }
 })
 
 module.exports = answersRouter

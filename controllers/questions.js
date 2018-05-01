@@ -48,7 +48,7 @@ questionsRouter.post('/', async (req, res) => {
     category: body.category
   })
   const savedQuestion = await question.save()
-  res.json(savedQuestion)
+  res.json(Question.format(savedQuestion))
 })
 
 questionsRouter.delete('/:id', async (req, res) => {
