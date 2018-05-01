@@ -15,6 +15,7 @@ const answerRouter = require('./controllers/answers')
 mongoose.connect(config.mongoUrl)
 mongoose.Promise = global.Promise
 
+app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cors())
 
